@@ -24,7 +24,6 @@ public class Sell {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer_id", nullable = false)
     //Покупатель
     private Customer customer;
 
@@ -40,8 +39,7 @@ public class Sell {
     //Зарегистрирован ли чек
     private Boolean complete;
 
-    @OneToOne
-    @JoinColumn(name = "order_id")
+    @OneToOne(mappedBy = "sell")
     //Заказ в корзине
     private Order order;
 

@@ -24,13 +24,13 @@ public class Customer {
 
     @Column(name = "discount_first")
     @ColumnDefault("0")
-    private Long discount_first;
+    private Byte discount_first;
 
     @Column(name = "discount_second")
     @ColumnDefault("0")
-    private Long discount_second;
+    private Byte discount_second;
 
     //текущая корзина товаров
-    @OneToOne
+    @OneToOne(mappedBy = "customer")
     private Sell bucket;
 }

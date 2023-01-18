@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 
 @Entity
 @Table(name = "reviews")
@@ -19,10 +20,9 @@ public class Review {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "customer")
     private Customer customer;
 
-    @OneToOne
+    @ManyToOne
     private Product product;
 
     @Column(name = "rating", nullable = false)

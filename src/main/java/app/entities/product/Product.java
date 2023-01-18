@@ -35,18 +35,9 @@ public class Product {
     @Column(name = "discount")
     private Byte discount;
 
-    @OneToMany
-    @JoinColumn(name = "review_ids")
+    @OneToMany(mappedBy = "product")
     //оценки пользователей
     private List<Review> reviewList;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Long getPrice(){
         //Цена вместе с копейками

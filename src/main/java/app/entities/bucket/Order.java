@@ -21,13 +21,11 @@ public class Order {
     //Ид сущности
     private Long id;
 
-    @OneToMany
-    @JoinColumn(name = "products_id")
+    @OneToMany(mappedBy = "order")
     //Корзина
     private List<Product> products;
 
     @OneToOne
-    @JoinColumn(name = "sell_id")
     private Sell sell;
 
     public void addProduct(Product product){

@@ -6,6 +6,8 @@ import app.repositories.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomerService {
 
@@ -24,23 +26,28 @@ public class CustomerService {
         return sellService.newSell(customer);
     }
 
+    public List<Customer> findAll() {
+        return customerRepo.findAll();
+    }
+
     public Customer newCustomer(Customer customer) {
         customerRepo.save(customer);
         return customer;
     }
 
-    public void changeDiscount(Long customer_id, Long discount_first, Long discount_second){
-        if(discount_first == 0.0 && discount_second == 0.0){
-            return;
+    public void changeFirstDiscount(Long customer_id, Byte discount) {
+        if (discount >= 0 && discount < 100) {
+            Customer customer = customerRepo.getById(customer_id);
+            customer.setDiscount_first(discount);
+            customerRepo.save(customer);
         }
+    }
 
-        Customer customer = customerRepo.getById(customer_id);
-        if (discount_first > 0 && discount_first < 100) {
-            customer.setDiscount_first(discount_first);
+    public void changeSecondDiscount(Long customer_id, Byte discount) {
+        if (discount >= 0 && discount < 100) {
+            Customer customer = customerRepo.getById(customer_id);
+            customer.setDiscount_second(discount);
+            customerRepo.save(customer);
         }
-        if (discount_second > 0 && discount_second < 100) {
-            customer.setDiscount_second(discount_second);
-        }
-        customerRepo.save(customer);
     }
 }
