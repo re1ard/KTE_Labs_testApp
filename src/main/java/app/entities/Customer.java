@@ -23,12 +23,10 @@ public class Customer {
     private String name;
 
     @Column(name = "discount_first")
-    @ColumnDefault("0")
-    private Byte discount_first;
+    private Byte discount_first = 0;
 
     @Column(name = "discount_second")
-    @ColumnDefault("0")
-    private Byte discount_second;
+    private Byte discount_second = 0;
 
     //текущая корзина товаров
     @OneToOne(mappedBy = "customer")

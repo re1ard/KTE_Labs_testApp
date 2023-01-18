@@ -33,7 +33,7 @@ public class Product {
     private Long price;
 
     @Column(name = "discount")
-    private Byte discount;
+    private Byte discount = 0;
 
     @OneToMany(mappedBy = "product")
     //оценки пользователей

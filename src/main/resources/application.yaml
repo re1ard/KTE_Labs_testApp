@@ -17,3 +17,4 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         storage_engine: innodb
+        format_sql: true

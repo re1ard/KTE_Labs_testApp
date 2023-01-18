@@ -45,7 +45,8 @@ public class SellService {
     public Sell newSellWithProducts(Customer customer, List<Product> products) {
         Sell sell = new Sell();
         sell.setCustomer(customer);
-        sell.setProducts(products);
+        products.forEach(sell::addToOrder);
+        //sell.setProducts(products);
         sellRepo.save(sell);
         return sell;
     }
@@ -71,18 +72,18 @@ public class SellService {
     }
 
     public Long calculateFinalCostFromProduct(List<Product> products, Customer customer) {
+        Long final_cost = 0L;
         HashMap<Long, Integer> discount_map = new HashMap<>();
         for(Product product: products){
             discount_map.merge(product.getId(), 1, (current, one) -> current + one);
+            final_cost += product.getPrice();
         }
 
         Boolean have_chance_second_discount = false;
-        Long final_cost = 0L;
         for(Map.Entry<Long, Integer> entry:discount_map.entrySet()){
             if(entry.getValue() >= 5){
                 have_chance_second_discount = true;
             }
-            final_cost += productRepo.getById(entry.getKey()).getPrice();
         }
 
         if(have_chance_second_discount && customer.getDiscount_second() > 0) {

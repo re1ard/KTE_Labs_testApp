@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class Sell {
     //Зарегистрирован ли чек
     private Boolean complete;
 
-    @OneToMany
+    @ManyToMany
     private List<Product> products;
 
     @Column(name = "final_cost")

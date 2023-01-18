@@ -45,7 +45,7 @@ public class SellController {
         List<Product> prepare_bucket = new ArrayList<>();
         for(int i = 0; i < products_ids.size(); i++){
             Product product = productService.getProduct(products_ids.get(i));
-            for(int j = 0;j < count.size(); j++){
+            for(int j = 0;j < count.get(i); j++){
                 prepare_bucket.add(product);
             }
         }
