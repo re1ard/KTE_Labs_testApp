@@ -1,6 +1,8 @@
 server:
   port: 8080
-
+  encoding:
+    charset: UTF-8
+    force-response: true
 spring:
   liquibase:
     enabled: false

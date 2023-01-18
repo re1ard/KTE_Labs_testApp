@@ -2,6 +2,7 @@ package app.entities.product;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Table;
@@ -9,8 +10,14 @@ import java.util.HashMap;
 
 @Setter
 @Getter
-@Table(name = "purchased_products")
+@NoArgsConstructor
 public class PurchasedProduct extends Product {
+    public PurchasedProduct(Long product_id){
+        this.id = product_id;
+    }
+
+    private Long id;
+
     private Review user_review;
 
     private Double avg_rate;
@@ -19,6 +26,7 @@ public class PurchasedProduct extends Product {
 
     //Получение средней оценки //4
     public Double getAvg_rate() {
+        if (users_rate == null) return 0.0;
         return users_rate.keySet().stream().mapToDouble(Double::valueOf).average().getAsDouble();
     }
 }

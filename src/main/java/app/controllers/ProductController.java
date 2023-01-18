@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.entities.product.Product;
+import app.entities.product.PurchasedProduct;
 import app.services.CustomerService;
 import app.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,13 @@ public class ProductController {
 
     //4.Получение дополнительно информации
     @GetMapping("/show/{product_id}/{customer_id}")
-    public ResponseEntity showProductAndReview(@PathVariable Long product_id,
-                                               @PathVariable Long customer_id){
+    public ResponseEntity<PurchasedProduct> showProductAndReview(@PathVariable Long product_id,
+                                                                 @PathVariable Long customer_id){
         return new ResponseEntity(productService.getProductInfo(product_id, customer_id), HttpStatus.OK);
     }
 
     //7.Оценка товара если он куплен
+    //http://localhost:8080/api/products/rate/2/2?rate=4
     @PostMapping("/rate/{product_id}/{customer_id}")
     public ResponseEntity rateProduct(@PathVariable Long product_id,
                                       @PathVariable Long customer_id,

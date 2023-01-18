@@ -32,6 +32,7 @@ public class SellController {
     }
 
     //5. Запрос итоговой стоимости перед чеком
+    //http://localhost:8080/api/sell/prepare?customer_id=1&products_ids=1,2&count=8,1
     @GetMapping("/prepare")
     public ResponseEntity<Long> prepare_buy(@RequestParam Long customer_id,
                                         @RequestParam List<Long> products_ids,
@@ -54,11 +55,12 @@ public class SellController {
     }
 
     //6. Регистрация продажи
+    //http://localhost:8080/api/sell/register?customer_id=2&products_ids=1,2&count=8,1&final_price=547500
     @PostMapping("/register")
     public ResponseEntity<String> register_buy(@RequestParam Long customer_id,
                                                @RequestParam List<Long> products_ids,
                                                @RequestParam List<Integer> count,
-                                               @RequestParam Long final_price) {
+                                               @RequestParam long final_price) {
 
         Customer customer = customerService.getCustomer(customer_id);
         if(customer == null) {
@@ -68,13 +70,13 @@ public class SellController {
         List<Product> prepare_bucket = new ArrayList<>();
         for(int i = 0; i < products_ids.size(); i++){
             Product product = productService.getProduct(products_ids.get(i));
-            for(int j = 0;j < count.size(); j++){
+            for(int j = 0;j < count.get(i); j++){
                 prepare_bucket.add(product);
             }
         }
-        Long bucket_price = sellService.calculateFinalCostFromProduct(prepare_bucket, customer);
+        long bucket_price = sellService.calculateFinalCostFromProduct(prepare_bucket, customer);
         if(bucket_price != final_price) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(String.format("final cost not equals: %d %d", bucket_price, final_price),HttpStatus.FORBIDDEN);
         }
 
         Sell created_sell = sellService.newSellWithProducts(customer, prepare_bucket);

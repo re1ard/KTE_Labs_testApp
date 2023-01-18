@@ -29,6 +29,6 @@ public class Customer {
     private Byte discount_second = 0;
 
     //текущая корзина товаров
-    @OneToOne(mappedBy = "customer")
+    @OneToOne
     private Sell bucket;
 }

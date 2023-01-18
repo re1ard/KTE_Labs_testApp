@@ -45,8 +45,7 @@ public class SellService {
     public Sell newSellWithProducts(Customer customer, List<Product> products) {
         Sell sell = new Sell();
         sell.setCustomer(customer);
-        products.forEach(sell::addToOrder);
-        //sell.setProducts(products);
+        sell.setProducts(products);
         sellRepo.save(sell);
         return sell;
     }

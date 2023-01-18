@@ -57,10 +57,11 @@ public class ProductService {
     }
 
     public PurchasedProduct getProductInfo(long product_id, long customer_id) {
-        PurchasedProduct product = (PurchasedProduct) productRepo.getById(product_id);
+        PurchasedProduct product = new PurchasedProduct(product_id);
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         product.setUsers_rate(getReviewRate(product_id));
         product.setAvg_rate(product.getAvg_rate());//мда
+        product.setUser_review(review);
         return product;
     }
 
@@ -70,7 +71,7 @@ public class ProductService {
 
     //7.оценка товара
     public boolean rateProduct(long customer_id, long product_id, byte rate){
-        Predicate<Product> check_id = x -> x.getId() == product_id;
+        Predicate<Product> check_id = x -> x.getId().longValue() == product_id;
         if(!productRepo.getBuyedProducts(customer_id).stream().anyMatch(check_id)){
             return false;
         };
@@ -89,6 +90,7 @@ public class ProductService {
             review = new Review();
             review.setProduct(productRepo.getById(product_id));
             review.setCustomer_id(customer_id);
+            review.setRating(rate);
             reviewRepo.save(review);
             return true;
         }
@@ -102,7 +104,7 @@ public class ProductService {
         for(Review review: reviews){
             review_rate.merge(review.getRating(), 1, (total, one) -> total + one);
         }
-        return review_rate;
+        return review_rate.isEmpty() ? null : review_rate;
     }
 
     //Получение средней оценки //4
