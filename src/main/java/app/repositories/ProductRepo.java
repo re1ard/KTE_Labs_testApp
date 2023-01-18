@@ -14,7 +14,7 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query(value = "SELECT product FROM Product product")
     List<Product> findAll();
 
-    @Query(value = "SELECT DISTINCT sells.order.products FROM Sell sells WHERE sells.customer.id = ?1 AND sells.complete = true")
+    @Query(value = "SELECT DISTINCT sells.products FROM Sell sells WHERE sells.customer.id = ?1 AND sells.complete = true")
     List<Product> getBuyedProducts(Long customer_id);
 
 }

@@ -47,6 +47,9 @@ public class Sell {
     //Конечная/Текущая цена на заказ
     private Long cost;
 
+    @Column(name = "final_discount")
+    private Byte final_discount;
+
     public void addToOrder(Product product){
         products.add(product);
     }

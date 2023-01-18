@@ -19,12 +19,12 @@ public class Review {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToOne
-    private Customer customer;
-
-    @ManyToOne
-    private Product product;
+    @Column(name = "customer_id")
+    private Long customer_id;
 
     @Column(name = "rating", nullable = false)
     private Byte rating;
+
+    @ManyToOne
+    private Product product;
 }

@@ -4,11 +4,13 @@ package app.entities.product;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Table;
 import java.util.HashMap;
 
 @Setter
 @Getter
-public class ExtraProduct extends Product {
+@Table(name = "purchased_products")
+public class PurchasedProduct extends Product {
     private Review user_review;
 
     private Double avg_rate;

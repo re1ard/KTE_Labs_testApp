@@ -1,6 +1,6 @@
 package app.services;
 
-import app.entities.product.ExtraProduct;
+import app.entities.product.PurchasedProduct;
 import app.entities.product.Product;
 import app.entities.product.Review;
 import app.repositories.ProductRepo;
@@ -56,8 +56,8 @@ public class ProductService {
         productRepo.save(product);
     }
 
-    public ExtraProduct getProductInfo(long product_id, long customer_id) {
-        ExtraProduct product = (ExtraProduct) productRepo.getById(product_id);
+    public PurchasedProduct getProductInfo(long product_id, long customer_id) {
+        PurchasedProduct product = (PurchasedProduct) productRepo.getById(product_id);
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         product.setUsers_rate(getReviewRate(product_id));
         product.setAvg_rate(product.getAvg_rate());//мда
@@ -88,7 +88,7 @@ public class ProductService {
         if(review == null && rate >= 0 && rate <= 5){
             review = new Review();
             review.setProduct(productRepo.getById(product_id));
-            review.setCustomer(customerService.getCustomer(customer_id));
+            review.setCustomer_id(customer_id);
             reviewRepo.save(review);
             return true;
         }

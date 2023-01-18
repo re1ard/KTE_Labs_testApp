@@ -1,0 +1,10 @@
+services:
+  kte_labs_db:
+    image: 'postgres:12.12'
+    container_name: app_db
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=kte_labs
+    ports:
+      - 5432:5432
