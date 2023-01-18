@@ -6,10 +6,7 @@ import app.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,9 +34,22 @@ public class ProductController {
         }
     }
 
+    //4.Получение дополнительно информации
     @GetMapping("/show/{product_id}/{customer_id}")
     public ResponseEntity showProductAndReview(@PathVariable Long product_id,
                                                @PathVariable Long customer_id){
         return new ResponseEntity(productService.getProductInfo(product_id, customer_id), HttpStatus.OK);
+    }
+
+    //7.Оценка товара если он куплен
+    @PostMapping("/rate/{product_id}/{customer_id}")
+    public ResponseEntity rateProduct(@PathVariable Long product_id,
+                                      @PathVariable Long customer_id,
+                                      @RequestParam(defaultValue = "-1") Byte rate){
+        if(productService.rateProduct(customer_id, product_id, rate)){
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
 }

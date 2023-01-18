@@ -5,23 +5,31 @@ import app.entities.product.Product;
 import app.entities.product.Review;
 import app.repositories.ProductRepo;
 import app.repositories.ReviewRepo;
+import app.repositories.SellRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service
 public class ProductService {
 
     private ProductRepo productRepo;
     private ReviewRepo reviewRepo;
+    private SellRepo sellRepo;
+    private CustomerService customerService;
 
     @Autowired
     public ProductService(ProductRepo productRepo,
-                          ReviewRepo reviewRepo){
+                          ReviewRepo reviewRepo,
+                          SellRepo sellRepo,
+                          CustomerService customerService){
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;
+        this.sellRepo = sellRepo;
+        this.customerService = customerService;
     }
 
     public Product newProduct(Product product){
@@ -47,8 +55,31 @@ public class ProductService {
         return productRepo.findAll();
     }
 
-    public void reviewProduct(long customer_id, long product_id){
+    //7.оценка товара
+    public boolean rateProduct(long customer_id, long product_id, byte rate){
+        Predicate<Product> check_id = x -> x.getId() == product_id;
+        if(!productRepo.getBuyedProducts(customer_id).stream().anyMatch(check_id)){
+            return false;
+        };
 
+        Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
+        if(review != null && (rate == -1)){
+            reviewRepo.delete(review);
+            return true;
+        }
+        if(review != null && rate >= 0 && rate <= 5){
+            review.setRating(rate);
+            reviewRepo.save(review);
+            return true;
+        }
+        if(review == null && rate >= 0 && rate <= 5){
+            review = new Review();
+            review.setProduct(productRepo.getById(product_id));
+            review.setCustomer(customerService.getCustomer(customer_id));
+            reviewRepo.save(review);
+            return true;
+        }
+        return false;
     }
 
     //Получение всех оценок //4

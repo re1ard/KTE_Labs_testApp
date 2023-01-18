@@ -35,6 +35,10 @@ public class CustomerService {
         return customer;
     }
 
+    public Customer getCustomer(Long customer_id) {
+        return customerRepo.getById(customer_id);
+    }
+
     public void changeFirstDiscount(Long customer_id, Byte discount) {
         if (discount >= 0 && discount < 100) {
             Customer customer = customerRepo.getById(customer_id);
