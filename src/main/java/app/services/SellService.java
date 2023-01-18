@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -58,13 +59,12 @@ public class SellService {
     }
 
     public Sell getSell(Long sell_id){
-        return calcucateFinalCost(sell_id);
+        return calculateFinalCost(sell_id);
     }
 
-    public Sell calcucateFinalCost(Long sell_id){
-        Sell sell = sellRepo.getById(sell_id);
+    public Long calculateFinalCostFromProduct(List<Product> products, Customer customer) {
         HashMap<Long, Integer> discount_map = new HashMap<>();
-        for(Product product: sell.getOrder().getProducts()){
+        for(Product product: products){
             discount_map.merge(product.getId(), 1, (current, one) -> current + one);
         }
 
@@ -77,12 +77,19 @@ public class SellService {
             final_cost += productRepo.getById(entry.getKey()).getPrice();
         }
 
-        if(have_chance_second_discount && sell.getCustomer().getDiscount_second() > 0) {
-            sell.setCost(final_cost - final_cost * (sell.getCustomer().getDiscount_second() / 100));
-        } else if (sell.getCustomer().getDiscount_first() > 0) {
-            sell.setCost(final_cost - final_cost * (sell.getCustomer().getDiscount_first() / 100));
+        if(have_chance_second_discount && customer.getDiscount_second() > 0) {
+            return (final_cost - final_cost * (customer.getDiscount_second() / 100));
+        } else if (customer.getDiscount_first() > 0) {
+            return (final_cost - final_cost * (customer.getDiscount_first() / 100));
+        } else {
+            return final_cost;
         }
+    }
 
+    public Sell calculateFinalCost(Long sell_id){
+        Sell sell = sellRepo.getById(sell_id);
+        Long cost = calculateFinalCostFromProduct(sell.getProducts(), sell.getCustomer());
+        sell.setCost(cost);
         sellRepo.save(sell);
         return sell;
     }

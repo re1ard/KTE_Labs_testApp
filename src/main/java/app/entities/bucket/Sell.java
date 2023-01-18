@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "sells")
@@ -39,15 +40,14 @@ public class Sell {
     //Зарегистрирован ли чек
     private Boolean complete;
 
-    @OneToOne(mappedBy = "sell")
-    //Заказ в корзине
-    private Order order;
+    @OneToMany
+    private List<Product> products;
 
     @Column(name = "final_cost")
     //Конечная/Текущая цена на заказ
     private Long cost;
 
     public void addToOrder(Product product){
-        order.addProduct(product);
+        products.add(product);
     }
 }

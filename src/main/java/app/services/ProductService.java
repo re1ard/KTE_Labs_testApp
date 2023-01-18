@@ -37,6 +37,10 @@ public class ProductService {
         return product;
     }
 
+    public Product getProduct(Long product_id){
+        return productRepo.getById(product_id);
+    }
+
     public void changeDiscount(long product_id, byte discount){
         Product product = productRepo.getById(product_id);
         product.setDiscount(discount);

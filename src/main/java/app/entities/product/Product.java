@@ -44,4 +44,8 @@ public class Product {
         //Например: 245 рублей 35 копеек это 24535
         return price - price * (discount / 100);
     }
+
+    public Long getOriginalPrice(){
+        return price;
+    }
 }
