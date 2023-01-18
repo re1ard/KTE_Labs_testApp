@@ -24,7 +24,7 @@ public class Product {
     //Название продукта
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     //Описание продукта
     private String description;
 

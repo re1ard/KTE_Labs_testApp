@@ -42,6 +42,14 @@ public class SellService {
         return getSell(sell.getId());
     }
 
+    public Sell newSellWithProducts(Customer customer, List<Product> products) {
+        Sell sell = new Sell();
+        sell.setCustomer(customer);
+        sell.setProducts(products);
+        sellRepo.save(sell);
+        return sell;
+    }
+
     public String closeSell(Long sell_id){
         Sell sell = sellRepo.getById(sell_id);
         sell.setComplete(true);

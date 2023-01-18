@@ -37,6 +37,15 @@ public class ProductService {
         return product;
     }
 
+    public Product newProduct(String name, String description, Long price) {
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(price);
+        productRepo.save(product);
+        return product;
+    }
+
     public Product getProduct(Long product_id){
         return productRepo.getById(product_id);
     }

@@ -35,6 +35,13 @@ public class CustomerService {
         return customer;
     }
 
+    public Customer newCustomer(String name) {
+        Customer customer = new Customer();
+        customer.setName(name);
+        customerRepo.save(customer);
+        return customer;
+    }
+
     public Customer getCustomer(Long customer_id) {
         return customerRepo.getById(customer_id);
     }
