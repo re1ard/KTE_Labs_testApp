@@ -6,6 +6,7 @@ import app.entities.product.Review;
 import app.repositories.ProductRepo;
 import app.repositories.ReviewRepo;
 import app.repositories.SellRepo;
+import app.repositories.SelledProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +21,19 @@ public class ProductService {
     private ReviewRepo reviewRepo;
     private SellRepo sellRepo;
     private CustomerService customerService;
+    private SelledProductRepo selledProductRepo;
 
     @Autowired
     public ProductService(ProductRepo productRepo,
                           ReviewRepo reviewRepo,
                           SellRepo sellRepo,
-                          CustomerService customerService){
+                          CustomerService customerService,
+                          SelledProductRepo selledProductRepo){
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;
         this.sellRepo = sellRepo;
         this.customerService = customerService;
+        this.selledProductRepo = selledProductRepo;
     }
 
     public Product newProduct(Product product){
@@ -70,21 +74,21 @@ public class ProductService {
     }
 
     //7.оценка товара
-    public boolean rateProduct(long customer_id, long product_id, byte rate){
+    public int rateProduct(long customer_id, long product_id, byte rate){
         Predicate<Product> check_id = x -> x.getId().longValue() == product_id;
         if(!productRepo.getBuyedProducts(customer_id).stream().anyMatch(check_id)){
-            return false;
+            return -1;
         };
 
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         if(review != null && (rate == -1)){
             reviewRepo.delete(review);
-            return true;
+            return 1;
         }
         if(review != null && rate >= 0 && rate <= 5){
             review.setRating(rate);
             reviewRepo.save(review);
-            return true;
+            return 1;
         }
         if(review == null && rate >= 0 && rate <= 5){
             review = new Review();
@@ -92,9 +96,9 @@ public class ProductService {
             review.setCustomer_id(customer_id);
             review.setRating(rate);
             reviewRepo.save(review);
-            return true;
+            return 1;
         }
-        return false;
+        return -255;
     }
 
     //Получение всех оценок //4

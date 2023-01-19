@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 
 @RestController
@@ -45,13 +46,14 @@ public class ProductController {
     //7.Оценка товара если он куплен
     //http://localhost:8080/api/products/rate/2/2?rate=4
     @PostMapping("/rate/{product_id}/{customer_id}")
-    public ResponseEntity rateProduct(@PathVariable Long product_id,
-                                      @PathVariable Long customer_id,
-                                      @RequestParam(defaultValue = "-1") Byte rate){
-        if(productService.rateProduct(customer_id, product_id, rate)){
-            return new ResponseEntity(HttpStatus.OK);
+    public ResponseEntity<Integer> rateProduct(@PathVariable Long product_id,
+                                                          @PathVariable Long customer_id,
+                                                          @RequestParam(defaultValue = "-1") Byte rate){
+        int rateResult = productService.rateProduct(customer_id, product_id, rate);
+        if(rateResult == 1){
+            return new ResponseEntity(rateResult, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity(rateResult, HttpStatus.NOT_FOUND);
         }
     }
 }

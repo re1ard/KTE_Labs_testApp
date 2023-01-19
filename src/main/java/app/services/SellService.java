@@ -1,11 +1,13 @@
 package app.services;
 
 import app.entities.Customer;
+import app.entities.SelledProduct;
 import app.entities.bucket.Sell;
 import app.entities.product.Product;
 import app.repositories.CustomerRepo;
 import app.repositories.ProductRepo;
 import app.repositories.SellRepo;
+import app.repositories.SelledProductRepo;
 import org.h2.util.CurrentTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,16 +23,19 @@ public class SellService {
     private SellRepo sellRepo;
     private ProductRepo productRepo;
     private CustomerRepo customerRepo;
+    private SelledProductRepo selledProductRepo;
 
     private Short current_sell_id = 100;
 
     @Autowired
     public SellService(SellRepo sellRepo,
                        ProductRepo productRepo,
-                       CustomerRepo customerRepo) {
+                       CustomerRepo customerRepo,
+                       SelledProductRepo selledProductRepo) {
         this.sellRepo = sellRepo;
         this.productRepo = productRepo;
         this.customerRepo = customerRepo;
+        this.selledProductRepo = selledProductRepo;
     }
 
     public Sell newSell(Customer customer){
@@ -56,6 +61,9 @@ public class SellService {
         sell.setSell_date(LocalDateTime.now());
         sell.setSell_id(current_sell_id);
         current_sell_id++;
+        for(Product product: sell.getProducts()){
+            selledProductRepo.save(new SelledProduct(product.getId(), sell.getCustomer().getId()));
+        }
         return String.format("%05d", sell.getSell_id());
     }
 
