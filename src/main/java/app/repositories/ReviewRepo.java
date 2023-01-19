@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface ReviewRepo extends JpaRepository<Review, Long> {
-    @Query(value = "SELECT review FROM Review review WHERE review.product.id = ?1 AND review.customer_id = ?2")
+    @Query(value = "SELECT review FROM Review review WHERE review.product_id = ?1 AND review.customer_id = ?2")
     Optional<Review> findCustomerReviewOnProduct(Long product_id, Long customer_id);
 
-    @Query(value = "SELECT review FROM Review review WHERE review.product.id = ?1")
+    @Query(value = "SELECT review FROM Review review WHERE review.product_id = ?1")
     List<Review> findReviews(Long product_id);
 }

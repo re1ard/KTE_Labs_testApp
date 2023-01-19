@@ -25,6 +25,6 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private Byte rating;
 
-    @ManyToOne
-    private Product product;
+    @Column(name = "product_id")
+    private Long product_id;
 }

@@ -35,10 +35,6 @@ public class Product {
     @Column(name = "discount")
     private Byte discount = 0;
 
-    @OneToMany(mappedBy = "product")
-    //оценки пользователей
-    private List<Review> reviewList;
-
     public Long getPrice(){
         //Цена вместе с копейками
         //Например: 245 рублей 35 копеек это 24535

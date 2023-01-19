@@ -61,7 +61,7 @@ public class ProductService {
     }
 
     public PurchasedProduct getProductInfo(long product_id, long customer_id) {
-        PurchasedProduct product = new PurchasedProduct(product_id);
+        PurchasedProduct product = (PurchasedProduct) productRepo.getById(product_id);
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         product.setUsers_rate(getReviewRate(product_id));
         product.setAvg_rate(product.getAvg_rate());//мда
@@ -95,7 +95,7 @@ public class ProductService {
         }
         if(review == null && rate >= 0 && rate <= 5){
             review = new Review();
-            review.setProduct(productRepo.getById(product_id));
+            review.setProduct_id(product_id);
             review.setCustomer_id(customer_id);
             review.setRating(rate);
             reviewRepo.save(review);
