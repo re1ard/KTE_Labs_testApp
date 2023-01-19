@@ -28,6 +28,7 @@ public class AfterInit {
         customerService.newCustomer("Ivan Ivanich");
         customerService.newCustomer("Petor Petrovich");
         customerService.newCustomer("San Sanich");
+        customerService.newCustomer("Not buy guy");
 
         productService.newProduct("Бипки", "Никто не знает, что такое бипки", 14000L);
         productService.newProduct("Супер-Бипки", "Эт ваще отвал", 435500L);

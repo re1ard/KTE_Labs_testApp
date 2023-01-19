@@ -61,11 +61,12 @@ public class ProductService {
     }
 
     public PurchasedProduct getProductInfo(long product_id, long customer_id) {
-        PurchasedProduct product = (PurchasedProduct) productRepo.getById(product_id);
+        PurchasedProduct product = new PurchasedProduct();
+        product.setDescription(productRepo.getById(product_id).getDescription());
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         product.setUsers_rate(getReviewRate(product_id));
         product.setAvg_rate(product.getAvg_rate());//мда
-        product.setUser_review(review);
+        if(review != null) product.setUser_review(review.getRating());
         return product;
     }
 

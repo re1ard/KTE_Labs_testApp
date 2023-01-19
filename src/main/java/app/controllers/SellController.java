@@ -37,19 +37,11 @@ public class SellController {
     public ResponseEntity<Long> prepare_buy(@RequestParam Long customer_id,
                                         @RequestParam List<Long> products_ids,
                                       @RequestParam List<Integer> count) {
-
         Customer customer = customerService.getCustomer(customer_id);
-        if(customer == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        if(customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        List<Product> prepare_bucket = new ArrayList<>();
-        for(int i = 0; i < products_ids.size(); i++){
-            Product product = productService.getProduct(products_ids.get(i));
-            for(int j = 0;j < count.get(i); j++){
-                prepare_bucket.add(product);
-            }
-        }
+        List<Product> prepare_bucket = createPrepareBucket(customer_id, products_ids, count);
+        if(prepare_bucket == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(sellService.calculateFinalCostFromProduct(prepare_bucket, customer), HttpStatus.OK);
     }
@@ -61,19 +53,10 @@ public class SellController {
                                                @RequestParam List<Long> products_ids,
                                                @RequestParam List<Integer> count,
                                                @RequestParam long final_price) {
-
         Customer customer = customerService.getCustomer(customer_id);
-        if(customer == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        if(customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        List<Product> prepare_bucket = new ArrayList<>();
-        for(int i = 0; i < products_ids.size(); i++){
-            Product product = productService.getProduct(products_ids.get(i));
-            for(int j = 0;j < count.get(i); j++){
-                prepare_bucket.add(product);
-            }
-        }
+        List<Product> prepare_bucket = createPrepareBucket(customer_id, products_ids, count);
         long bucket_price = sellService.calculateFinalCostFromProduct(prepare_bucket, customer);
         if(bucket_price != final_price) {
             return new ResponseEntity<>(String.format("final cost not equals: %d %d", bucket_price, final_price),HttpStatus.FORBIDDEN);
@@ -81,5 +64,16 @@ public class SellController {
 
         Sell created_sell = sellService.newSellWithProducts(customer, prepare_bucket);
         return new ResponseEntity<String>(sellService.closeSell(created_sell.getId(), prepare_bucket), HttpStatus.CREATED);
+    }
+
+    public List<Product> createPrepareBucket(Long customer_id, List<Long> products_ids, List<Integer> count){
+        List<Product> prepare_bucket = new ArrayList<>();
+        for(int i = 0; i < products_ids.size(); i++){
+            Product product = productService.getProduct(products_ids.get(i));
+            for(int j = 0;j < count.get(i); j++){
+                prepare_bucket.add(product);
+            }
+        }
+        return prepare_bucket;
     }
 }

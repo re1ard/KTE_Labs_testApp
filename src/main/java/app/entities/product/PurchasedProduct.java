@@ -13,9 +13,12 @@ import java.util.HashMap;
 
 @Setter
 @Getter
-public class PurchasedProduct extends Product {
+@NoArgsConstructor
+public class PurchasedProduct {
 
-    private Review user_review;
+    private String description;
+
+    private Byte user_review;
 
     private Double avg_rate;
 

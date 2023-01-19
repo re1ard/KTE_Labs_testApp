@@ -11,7 +11,4 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
-    @Override
-    @Query(value = "SELECT product FROM Product product")
-    List<Product> findAll();
 }

@@ -37,18 +37,18 @@ public class ProductController {
     }
 
     //4.Получение дополнительно информации
-    @GetMapping("/show/{product_id}/{customer_id}")
-    public ResponseEntity<PurchasedProduct> showProductAndReview(@PathVariable Long product_id,
-                                                                 @PathVariable Long customer_id){
+    @GetMapping("/show")
+    public ResponseEntity<PurchasedProduct> showProductAndReview(@RequestParam Long product_id,
+                                                                 @RequestParam Long customer_id){
         return new ResponseEntity(productService.getProductInfo(product_id, customer_id), HttpStatus.OK);
     }
 
     //7.Оценка товара если он куплен
     //http://localhost:8080/api/products/rate/2/2?rate=4
-    @PostMapping("/rate/{product_id}/{customer_id}")
-    public ResponseEntity<Integer> rateProduct(@PathVariable Long product_id,
-                                                          @PathVariable Long customer_id,
-                                                          @RequestParam(defaultValue = "-1") Byte rate){
+    @PostMapping("/rate")
+    public ResponseEntity<Integer> rateProduct(@RequestParam Long product_id,
+                                               @RequestParam Long customer_id,
+                                               @RequestParam(defaultValue = "-1",required = false) Byte rate){
         int rateResult = productService.rateProduct(customer_id, product_id, rate);
         if(rateResult == 1){
             return new ResponseEntity(rateResult, HttpStatus.CREATED);
