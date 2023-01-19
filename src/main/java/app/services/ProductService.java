@@ -75,10 +75,13 @@ public class ProductService {
 
     //7.оценка товара
     public int rateProduct(long customer_id, long product_id, byte rate){
-        Predicate<Product> check_id = x -> x.getId().longValue() == product_id;
-        if(!productRepo.getBuyedProducts(customer_id).stream().anyMatch(check_id)){
+        //Predicate<Product> check_id = x -> x.getId().longValue() == product_id;
+        //if(!productRepo.getBuyedProducts(customer_id).stream().anyMatch(check_id)){
+        //    return -1;
+        //};
+        if(selledProductRepo.buy_count(product_id, customer_id) == 0){
             return -1;
-        };
+        }
 
         Review review = reviewRepo.findCustomerReviewOnProduct(product_id, customer_id).orElse(null);
         if(review != null && (rate == -1)){
