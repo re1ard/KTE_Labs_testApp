@@ -1,6 +1,7 @@
 package app.entities;
 
 import app.entities.product.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,8 +25,12 @@ public class SelledProduct {
     @Column
     private Long customer_id;
 
-    public SelledProduct(Long product_id, Long customer_id){
+    @Column
+    private Long sell_id;
+
+    public SelledProduct(Long product_id, Long customer_id, Long sell_id){
         this.product_id = product_id;
         this.customer_id = customer_id;
+        this.sell_id = sell_id;
     }
 }

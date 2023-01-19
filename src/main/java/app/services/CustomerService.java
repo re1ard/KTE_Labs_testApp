@@ -21,11 +21,6 @@ public class CustomerService {
         this.sellService = sellService;
     }
 
-    public Sell newSellToCustomer(Long customer_id){
-        Customer customer = customerRepo.getById(customer_id);
-        return sellService.newSell(customer);
-    }
-
     public List<Customer> findAll() {
         return customerRepo.findAll();
     }

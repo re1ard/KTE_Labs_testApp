@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface SellRepo extends JpaRepository<Sell, Long> {
-    @Query(value = "SELECT sells FROM Sell sells WHERE sells.customer.id = ?1 AND sells.complete = true")
+    @Query(value = "SELECT sells FROM Sell sells WHERE sells.customer_id = ?1 AND sells.complete = true")
     List<Sell> getCompleteSells(Long customer_id);
 
 }

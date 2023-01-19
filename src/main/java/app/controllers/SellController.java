@@ -80,6 +80,6 @@ public class SellController {
         }
 
         Sell created_sell = sellService.newSellWithProducts(customer, prepare_bucket);
-        return new ResponseEntity<String>(sellService.closeSell(created_sell.getId()), HttpStatus.CREATED);
+        return new ResponseEntity<String>(sellService.closeSell(created_sell.getId(), prepare_bucket), HttpStatus.CREATED);
     }
 }

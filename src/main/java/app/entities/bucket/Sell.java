@@ -23,9 +23,9 @@ public class Sell {
     //Ид сущности
     private Long id;
 
-    @OneToOne
     //Покупатель
-    private Customer customer;
+    @Column(name = "customer_id")
+    private Long customer_id;
 
     @Column(name = "sell_date")
     //Дата продажи
@@ -39,17 +39,10 @@ public class Sell {
     //Зарегистрирован ли чек
     private Boolean complete;
 
-    @ManyToMany
-    private List<Product> products;
-
     @Column(name = "final_cost")
     //Конечная/Текущая цена на заказ
     private Long cost;
 
     @Column(name = "final_discount")
     private Byte final_discount;
-
-    public void addToOrder(Product product){
-        products.add(product);
-    }
 }

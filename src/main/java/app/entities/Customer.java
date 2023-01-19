@@ -27,8 +27,4 @@ public class Customer {
 
     @Column(name = "discount_second")
     private Byte discount_second = 0;
-
-    //текущая корзина товаров
-    @OneToOne
-    private Sell bucket;
 }

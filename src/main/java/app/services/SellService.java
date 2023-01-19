@@ -38,44 +38,23 @@ public class SellService {
         this.selledProductRepo = selledProductRepo;
     }
 
-    public Sell newSell(Customer customer){
-        Sell sell = new Sell();
-        sell.setCustomer(customer);
-        sellRepo.save(sell);
-        customer.setBucket(sell);
-        customerRepo.save(customer);
-        return getSell(sell.getId());
-    }
-
     public Sell newSellWithProducts(Customer customer, List<Product> products) {
         Sell sell = new Sell();
-        sell.setCustomer(customer);
-        sell.setProducts(products);
+        sell.setCustomer_id(customer.getId());
         sellRepo.save(sell);
         return sell;
     }
 
-    public String closeSell(Long sell_id){
+    public String closeSell(Long sell_id, List<Product> products){
         Sell sell = sellRepo.getById(sell_id);
         sell.setComplete(true);
         sell.setSell_date(LocalDateTime.now());
         sell.setSell_id(current_sell_id);
         current_sell_id++;
-        for(Product product: sell.getProducts()){
-            selledProductRepo.save(new SelledProduct(product.getId(), sell.getCustomer().getId()));
+        for(Product product: products){
+            selledProductRepo.save(new SelledProduct(product.getId(), sell.getCustomer_id(), sell.getId()));
         }
         return String.format("%05d", sell.getSell_id());
-    }
-
-    public void addProductToOrder(Long sell_id, Long product_id){
-        Product product = productRepo.getById(product_id);
-        Sell sell = sellRepo.getById(sell_id);
-        sell.addToOrder(product);
-        sellRepo.save(sell);
-    }
-
-    public Sell getSell(Long sell_id){
-        return calculateFinalCost(sell_id);
     }
 
     public Long calculateFinalCostFromProduct(List<Product> products, Customer customer) {
@@ -100,13 +79,5 @@ public class SellService {
         } else {
             return final_cost;
         }
-    }
-
-    public Sell calculateFinalCost(Long sell_id){
-        Sell sell = sellRepo.getById(sell_id);
-        Long cost = calculateFinalCostFromProduct(sell.getProducts(), sell.getCustomer());
-        sell.setCost(cost);
-        sellRepo.save(sell);
-        return sell;
     }
 }
