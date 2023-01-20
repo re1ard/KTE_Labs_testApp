@@ -20,3 +20,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         storage_engine: innodb
         format_sql: true
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: true
