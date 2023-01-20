@@ -11,6 +11,8 @@ import app.repositories.statistic.ProductStatisticRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class StatisticService {
     private CustomerStatisticRepo customerStatisticRepo;
@@ -30,6 +32,14 @@ public class StatisticService {
         this.selledProductRepo = selledProductRepo;
         this.productRepo = productRepo;
         this.customerRepo = customerRepo;
+    }
+
+    public ProductStatistic getProduct(Long product_id) {
+        return Optional.of(productStatisticRepo.getById(product_id)).orElse(null);
+    }
+
+    public CustomerStatistic getCustomer(Long customer_id) {
+        return Optional.of(customerStatisticRepo.getById(customer_id)).orElse(null);
     }
 
     public void updateProductStatistic(){
