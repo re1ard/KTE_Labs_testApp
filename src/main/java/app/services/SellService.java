@@ -1,14 +1,13 @@
 package app.services;
 
 import app.entities.Customer;
-import app.entities.SelledProduct;
+import app.entities.product.SelledProduct;
 import app.entities.bucket.Sell;
 import app.entities.product.Product;
 import app.repositories.CustomerRepo;
 import app.repositories.ProductRepo;
 import app.repositories.SellRepo;
 import app.repositories.SelledProductRepo;
-import org.h2.util.CurrentTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,32 +51,44 @@ public class SellService {
         sell.setSell_id(current_sell_id);
         current_sell_id++;
         for(Product product: products){
-            selledProductRepo.save(new SelledProduct(product.getId(), sell.getCustomer_id(), sell.getId()));
+            selledProductRepo.save(
+                    new SelledProduct(product.getId(), sell.getCustomer_id(), sell.getId(),
+                            product.getOriginalPrice(), calculateFinalCostToProduct(product, customerRepo.getById(sell.getCustomer_id()), products.size(),
+                            true)));
         }
         return String.format("%05d", sell.getSell_id());
     }
 
-    public Long calculateFinalCostFromProduct(List<Product> products, Customer customer) {
+    public Long calculateFinalCostFromProducts(List<Product> products, Customer customer) {
         Long final_cost = 0L;
-        HashMap<Long, Integer> discount_map = new HashMap<>();
-        for(Product product: products){
-            discount_map.merge(product.getId(), 1, (current, one) -> current + one);
-            final_cost += product.getPrice();
-        }
+        int product_count = products.size();
 
-        Boolean have_chance_second_discount = false;
-        for(Map.Entry<Long, Integer> entry:discount_map.entrySet()){
-            if(entry.getValue() >= 5){
-                have_chance_second_discount = true;
-            }
+        for(Product product: products) {
+            final_cost += calculateFinalCostToProduct(product, customer, product_count);
         }
+        return final_cost;
+    }
 
-        if(have_chance_second_discount && customer.getDiscount_second() > 0) {
-            return (final_cost - final_cost * (customer.getDiscount_second() / 100));
-        } else if (customer.getDiscount_first() > 0) {
-            return (final_cost - final_cost * (customer.getDiscount_first() / 100));
+    public Long calculateFinalCostToProduct(Product product, Customer customer, int product_count) {
+        return calculateFinalCostToProduct(product, customer, product_count, false);
+    }
+
+    public Long calculateFinalCostToProduct(Product product, Customer customer, int product_count, boolean return_discount_price) {
+        byte discount;
+        if (product_count >= 5 && customer.getDiscount_second() > 0) {
+            discount = (byte) (product.getDiscount().byteValue() + customer.getDiscount_second().byteValue());
+            if (discount > 18) discount = 18;
+            if (return_discount_price) return product.getOriginalPrice() * discount / 100;
+            return product.getOriginalPrice() - product.getOriginalPrice() * discount / 100;
+        } else if (customer.getDiscount_first() > 0){
+            discount = (byte) (product.getDiscount().byteValue() + customer.getDiscount_first().byteValue());
+            if (discount > 18) discount = 18;
+            if (return_discount_price) return product.getOriginalPrice() * discount / 100;
+            return product.getOriginalPrice() - product.getOriginalPrice() * discount / 100;
         } else {
-            return final_cost;
+            discount = product.getDiscount();
+            if (return_discount_price) return product.getOriginalPrice() * discount / 100;
+            return product.getOriginalPrice() - product.getOriginalPrice() * discount / 100;
         }
     }
 }

@@ -17,10 +17,24 @@ public class ProductControllerTest extends BaseTest {
     }
 
     @Test
+    //Проверка точности цены на выходе
     public void RateProduct() throws Exception {
         mockMvc.perform(get("http://localhost:8080/api/sell/prepare?customer_id=2&products_ids=1,2&count=8,1")).andExpect(status().isOk()).andExpect(content().string("547500"));
         mockMvc.perform(post("http://localhost:8080/api/sell/register?customer_id=2&products_ids=1,2&count=8,1&final_price=547500")).andExpect(status().isCreated());
         mockMvc.perform(post("http://localhost:8080/api/products/rate?rate=4&product_id=2&customer_id=2")).andDo(print()).andExpect(status().isCreated());
+    }
+
+    @Test
+    public void DiscountTest() throws Exception {
+        String order_url = "http://localhost:8080/api/sell/prepare?customer_id=3&products_ids=1,2&count=8,2";
+        //
+        Long prepared_price1 = Long.valueOf(mockMvc.perform(get(order_url)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        mockMvc.perform(post("http://localhost:8080/api/sell/register?customer_id=3&products_ids=1,2&count=8,2&final_price=" + prepared_price1.toString())).andExpect(status().isCreated());
+        mockMvc.perform(patch("http://localhost:8080/api/customers/3?second_discount=15")).andExpect(status().isOk());
+        //
+        Long prepared_price2 = Long.valueOf(mockMvc.perform(get(order_url)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
+        mockMvc.perform(post("http://localhost:8080/api/sell/register?customer_id=3&products_ids=1,2&count=8,2&final_price=" + prepared_price2.toString())).andExpect(status().isCreated());
+        assert prepared_price1 != prepared_price2;
     }
 
     @Test

@@ -43,7 +43,7 @@ public class SellController {
         List<Product> prepare_bucket = createPrepareBucket(customer_id, products_ids, count);
         if(prepare_bucket == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
-        return new ResponseEntity<>(sellService.calculateFinalCostFromProduct(prepare_bucket, customer), HttpStatus.OK);
+        return new ResponseEntity<>(sellService.calculateFinalCostFromProducts(prepare_bucket, customer), HttpStatus.OK);
     }
 
     //6. Регистрация продажи
@@ -57,7 +57,7 @@ public class SellController {
         if(customer == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         List<Product> prepare_bucket = createPrepareBucket(customer_id, products_ids, count);
-        long bucket_price = sellService.calculateFinalCostFromProduct(prepare_bucket, customer);
+        long bucket_price = sellService.calculateFinalCostFromProducts(prepare_bucket, customer);
         if(bucket_price != final_price) {
             return new ResponseEntity<>(String.format("final cost not equals: %d %d", bucket_price, final_price),HttpStatus.FORBIDDEN);
         }
