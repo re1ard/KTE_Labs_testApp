@@ -5,16 +5,14 @@ import app.entities.product.SelledProduct;
 import app.entities.bucket.Sell;
 import app.entities.product.Product;
 import app.repositories.CustomerRepo;
-import app.repositories.ProductRepo;
+import app.repositories.product.ProductRepo;
 import app.repositories.SellRepo;
-import app.repositories.SelledProductRepo;
+import app.repositories.product.SelledProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SellService {

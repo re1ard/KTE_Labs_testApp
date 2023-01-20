@@ -3,16 +3,15 @@ package app.services;
 import app.entities.product.PurchasedProduct;
 import app.entities.product.Product;
 import app.entities.product.Review;
-import app.repositories.ProductRepo;
-import app.repositories.ReviewRepo;
+import app.repositories.product.ProductRepo;
+import app.repositories.product.ReviewRepo;
 import app.repositories.SellRepo;
-import app.repositories.SelledProductRepo;
+import app.repositories.product.SelledProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Service
 public class ProductService {

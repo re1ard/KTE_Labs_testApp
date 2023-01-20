@@ -1,4 +1,4 @@
-package app.repositories;
+package app.repositories.product;
 
 import app.entities.product.Review;
 import org.springframework.data.jpa.repository.JpaRepository;

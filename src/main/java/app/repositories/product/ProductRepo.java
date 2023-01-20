@@ -1,4 +1,4 @@
-package app.repositories;
+package app.repositories.product;
 
 import app.entities.bucket.Sell;
 import app.entities.product.Product;
