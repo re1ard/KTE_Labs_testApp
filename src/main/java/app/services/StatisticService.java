@@ -10,6 +10,7 @@ import app.repositories.statistic.CustomerStatisticRepo;
 import app.repositories.statistic.ProductStatisticRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -35,11 +36,11 @@ public class StatisticService {
     }
 
     public ProductStatistic getProduct(Long product_id) {
-        return Optional.of(productStatisticRepo.getById(product_id)).orElse(null);
+        return productStatisticRepo.getStatistic(product_id);
     }
 
     public CustomerStatistic getCustomer(Long customer_id) {
-        return Optional.of(customerStatisticRepo.getById(customer_id)).orElse(null);
+        return customerStatisticRepo.getStatistic(customer_id);
     }
 
     public void updateProductStatistic(){
@@ -54,9 +55,9 @@ public class StatisticService {
         productStatisticRepo.deleteStatisticWithProductId(product_id);
         ProductStatistic statistic = new ProductStatistic();
         statistic.setProduct_id(product_id);
-        statistic.setComplete_sells_count(selledProductRepo.getRegisterSellCountOnProduct(product_id));
-        statistic.setTotal_product_sells_price(selledProductRepo.getOriginalPriceSum(product_id));
-        statistic.setTotal_discount_sells_price(selledProductRepo.getDiscountSum(product_id));
+        statistic.setComplete_sells_count(selledProductRepo.getRegisterSellCountOnProduct(product_id).orElse(0L));
+        statistic.setTotal_product_sells_price(selledProductRepo.getOriginalPriceSum(product_id).orElse(0L));
+        statistic.setTotal_discount_sells_price(selledProductRepo.getDiscountSum(product_id).orElse(0L));
         productStatisticRepo.save(statistic);
     }
 
@@ -64,9 +65,9 @@ public class StatisticService {
         customerStatisticRepo.deleteStatisticWithCustomerId(customer_id);
         CustomerStatistic statistic = new CustomerStatistic();
         statistic.setCustomer_id(customer_id);
-        statistic.setComplete_sells_count(selledProductRepo.getRegisterSellCountOnCustomer(customer_id));
-        statistic.setTotal_full_buy_price(selledProductRepo.getOriginalPriceSumPerCustomer(customer_id));
-        statistic.setTotal_full_discount(selledProductRepo.getDiscountSumPerCustomer(customer_id));
+        statistic.setComplete_sells_count(selledProductRepo.getRegisterSellCountOnCustomer(customer_id).orElse(0L));
+        statistic.setTotal_full_buy_price(selledProductRepo.getOriginalPriceSumPerCustomer(customer_id).orElse(0L));
+        statistic.setTotal_full_discount(selledProductRepo.getDiscountSumPerCustomer(customer_id).orElse(0L));
         customerStatisticRepo.save(statistic);
     }
 }
