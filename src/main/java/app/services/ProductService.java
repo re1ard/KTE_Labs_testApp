@@ -1,17 +1,24 @@
 package app.services;
 
+import app.entities.product.Discount;
 import app.entities.product.PurchasedProduct;
 import app.entities.product.Product;
 import app.entities.product.Review;
+import app.repositories.product.DiscountRepo;
 import app.repositories.product.ProductRepo;
 import app.repositories.product.ReviewRepo;
 import app.repositories.SellRepo;
 import app.repositories.product.SelledProductRepo;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ProductService {
@@ -21,18 +28,29 @@ public class ProductService {
     private SellRepo sellRepo;
     private CustomerService customerService;
     private SelledProductRepo selledProductRepo;
+    private DiscountRepo discountRepo;
+    private JobScheduler jobScheduler;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public ProductService(ProductRepo productRepo,
                           ReviewRepo reviewRepo,
                           SellRepo sellRepo,
                           CustomerService customerService,
-                          SelledProductRepo selledProductRepo){
+                          SelledProductRepo selledProductRepo,
+                          DiscountRepo discountRepo,
+                          JobScheduler jobScheduler){
         this.productRepo = productRepo;
         this.reviewRepo = reviewRepo;
         this.sellRepo = sellRepo;
         this.customerService = customerService;
         this.selledProductRepo = selledProductRepo;
+        this.discountRepo = discountRepo;
+        this.jobScheduler = jobScheduler;
+
+        this.jobScheduler.scheduleRecurrently("* */1 * * *", () -> changeDiscountRandomly());
     }
 
     public Product newProduct(Product product){
@@ -57,6 +75,28 @@ public class ProductService {
         Product product = productRepo.getById(product_id);
         product.setDiscount(discount);
         productRepo.save(product);
+    }
+
+    @Job(name = "randomly change discount on product")
+    public void changeDiscountRandomly() {
+        Discount active_discount = discountRepo.getActiveDiscount().orElse(null);
+        if(active_discount != null) {
+            Product product = productRepo.getById(active_discount.getProduct_id());
+            product.setDiscount((byte) 0);
+            productRepo.save(product);
+            discountRepo.delete(active_discount);
+        }
+
+        long rnd_num = (long) ((java.lang.Math.random()*100 % 10 )+1);
+        Product random_product = entityManager.createQuery("SELECT product FROM Product product ORDER BY "+rnd_num, Product.class).getSingleResult();
+
+        byte rnd_discount = (byte) ((new Random()).nextInt(6) + 5);
+        random_product.setDiscount(rnd_discount);
+        productRepo.save(random_product);
+
+        active_discount = new Discount();
+        active_discount.setProduct_id(random_product.getId());
+        active_discount.setDiscount(rnd_discount);
     }
 
     public PurchasedProduct getProductInfo(long product_id, long customer_id) {

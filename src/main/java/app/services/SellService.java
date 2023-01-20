@@ -8,6 +8,8 @@ import app.repositories.CustomerRepo;
 import app.repositories.product.ProductRepo;
 import app.repositories.SellRepo;
 import app.repositories.product.SelledProductRepo;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,18 +23,22 @@ public class SellService {
     private ProductRepo productRepo;
     private CustomerRepo customerRepo;
     private SelledProductRepo selledProductRepo;
-
+    private JobScheduler jobScheduler;
     private Short current_sell_id = 100;
 
     @Autowired
     public SellService(SellRepo sellRepo,
                        ProductRepo productRepo,
                        CustomerRepo customerRepo,
-                       SelledProductRepo selledProductRepo) {
+                       SelledProductRepo selledProductRepo,
+                       JobScheduler jobScheduler) {
         this.sellRepo = sellRepo;
         this.productRepo = productRepo;
         this.customerRepo = customerRepo;
         this.selledProductRepo = selledProductRepo;
+        this.jobScheduler = jobScheduler;
+
+        this.jobScheduler.scheduleRecurrently("* * */1 * *", () -> ResetCurrentSellId());
     }
 
     public Sell newSellWithProducts(Customer customer, List<Product> products) {
@@ -90,6 +96,7 @@ public class SellService {
         }
     }
 
+    @Job(name = "Reset everyday sell_id")
     public void ResetCurrentSellId() {
         current_sell_id = 100;
     }

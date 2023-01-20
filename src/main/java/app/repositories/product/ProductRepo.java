@@ -11,4 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepo extends JpaRepository<Product, Long> {
+    @Query(value = "SELECT COUNT(product) FROM Product product")
+    Long getTotalCount();
 }

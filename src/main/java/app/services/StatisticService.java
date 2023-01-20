@@ -8,6 +8,8 @@ import app.repositories.product.ProductRepo;
 import app.repositories.product.SelledProductRepo;
 import app.repositories.statistic.CustomerStatisticRepo;
 import app.repositories.statistic.ProductStatisticRepo;
+import org.jobrunr.jobs.annotations.Job;
+import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,18 +23,24 @@ public class StatisticService {
     private SelledProductRepo selledProductRepo;
     private ProductRepo productRepo;
     private CustomerRepo customerRepo;
+    private JobScheduler jobScheduler;
 
     @Autowired
     public StatisticService(CustomerStatisticRepo customerStatisticRepo,
                             ProductStatisticRepo productStatisticRepo,
                             SelledProductRepo selledProductRepo,
                             ProductRepo productRepo,
-                            CustomerRepo customerRepo) {
+                            CustomerRepo customerRepo,
+                            JobScheduler jobScheduler) {
         this.customerStatisticRepo = customerStatisticRepo;
         this.productStatisticRepo = productStatisticRepo;
         this.selledProductRepo = selledProductRepo;
         this.productRepo = productRepo;
         this.customerRepo = customerRepo;
+        this.jobScheduler = jobScheduler;
+
+        this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateProductStatistic());
+        this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateCustomerStatistic());
     }
 
     public ProductStatistic getProduct(Long product_id) {
@@ -43,10 +51,12 @@ public class StatisticService {
         return customerStatisticRepo.getStatistic(customer_id);
     }
 
+    @Job(name = "update product statistic")
     public void updateProductStatistic(){
         productRepo.findAll().stream().forEach(x -> ReCreateStatisticToProduct(x.getId()));
     }
 
+    @Job(name = "update customer statistic")
     public void updateCustomerStatistic(){
         customerRepo.findAll().stream().forEach(x -> ReCreateStatisticToCustomer(x.getId()));
     }
