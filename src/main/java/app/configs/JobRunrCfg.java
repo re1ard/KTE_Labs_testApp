@@ -1,0 +1,14 @@
+package app.configs;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class JobRunrCfg {
+    @Bean
+    public StorageProvider storageProvider(JobMapper jobMapper) {
+        InMemoryStorageProvider storageProvider = new InMemoryStorageProvider();
+        storageProvider.setJobMapper(jobMapper);
+        return storageProvider;
+    }
+}

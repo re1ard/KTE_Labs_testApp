@@ -89,4 +89,8 @@ public class SellService {
             return product.getOriginalPrice() - product.getOriginalPrice() * discount / 100;
         }
     }
+
+    public void ResetCurrentSellId() {
+        current_sell_id = 100;
+    }
 }
