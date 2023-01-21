@@ -1,4 +1,16 @@
 services:
+  kte_labs:
+    build: .
+    container_name: app_server
+    depends_on:
+      - kte_labs_db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://kte_labs_db:5432/kte_labs
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    ports:
+      - 8080:8080
   kte_labs_db:
     image: 'postgres:12.12'
     container_name: app_db
