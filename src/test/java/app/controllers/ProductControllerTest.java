@@ -65,4 +65,9 @@ public class ProductControllerTest extends BaseTest {
         mockMvc.perform(post("http://localhost:8080/api/products/rate?rate=4&product_id=2&customer_id=2")).andDo(print()).andExpect(status().isCreated());
         mockMvc.perform(get("http://localhost:8080/api/products/show?product_id=2&customer_id=1")).andDo(print()).andExpect(status().isOk());
     }
+
+    @Test
+    public void ForceChangeRandomDiscount() throws Exception {
+        mockMvc.perform(post("http://localhost:8080/api/force/random")).andExpect(status().isOk());
+    }
 }

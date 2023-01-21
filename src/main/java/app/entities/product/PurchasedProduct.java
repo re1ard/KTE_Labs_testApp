@@ -9,11 +9,13 @@ import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashMap;
 
 @Setter
 @Getter
 @NoArgsConstructor
+@XmlRootElement(name = "Product")
 public class PurchasedProduct {
 
     private String description;

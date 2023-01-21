@@ -4,6 +4,7 @@ import app.services.CustomerService;
 import app.services.ProductService;
 import app.services.SellService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -33,5 +34,6 @@ public class AfterInit {
         productService.newProduct("Бипки", "Никто не знает, что такое бипки", 14000L);
         productService.newProduct("Супер-Бипки", "Эт ваще отвал", 435500L);
         productService.newProduct("Мини-Бибки", "Меньше только Супер-Бипка", 954L);
+
     }
 }

@@ -14,7 +14,7 @@ public class StatisticControllerTest extends BaseTest {
 
     @Test
     public void A_CheckUpdateStatistic() throws Exception {
-        mockMvc.perform(post("http://localhost:8080/api/statistic/update")).andExpect(status().isOk());
+        mockMvc.perform(post("http://localhost:8080/api/force/update")).andExpect(status().isOk());
         mockMvc.perform(get("http://localhost:8080/api/statistic")).andExpect(status().isBadRequest());
         mockMvc.perform(get("http://localhost:8080/api/statistic?customer_id=1&product_id=1")).andExpect(status().isBadRequest());
     }
@@ -34,7 +34,7 @@ public class StatisticControllerTest extends BaseTest {
         String order_url = "http://localhost:8080/api/sell/prepare?customer_id=1&products_ids=1,2&count=8,2";
         Long prepared_price1 = Long.valueOf(mockMvc.perform(get(order_url)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         mockMvc.perform(post("http://localhost:8080/api/sell/register?customer_id=1&products_ids=1,2&count=8,2&final_price=" + prepared_price1.toString())).andExpect(status().isCreated());
-        mockMvc.perform(post("http://localhost:8080/api/statistic/update")).andExpect(status().isOk());
+        mockMvc.perform(post("http://localhost:8080/api/force/update")).andExpect(status().isOk());
         mockMvc.perform(get("http://localhost:8080/api/statistic?customer_id=1")).andDo(print()).andExpect(status().isOk());
     }
 
@@ -43,7 +43,7 @@ public class StatisticControllerTest extends BaseTest {
         String order_url = "http://localhost:8080/api/sell/prepare?customer_id=1&products_ids=1,2&count=8,2";
         Long prepared_price1 = Long.valueOf(mockMvc.perform(get(order_url)).andExpect(status().isOk()).andReturn().getResponse().getContentAsString());
         mockMvc.perform(post("http://localhost:8080/api/sell/register?customer_id=1&products_ids=1,2&count=8,2&final_price=" + prepared_price1.toString())).andExpect(status().isCreated());
-        mockMvc.perform(post("http://localhost:8080/api/statistic/update")).andExpect(status().isOk());
+        mockMvc.perform(post("http://localhost:8080/api/force/update")).andExpect(status().isOk());
         mockMvc.perform(get("http://localhost:8080/api/statistic?product_id=1")).andDo(print()).andExpect(status().isOk());
     }
 }

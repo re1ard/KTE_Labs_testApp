@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -50,7 +51,7 @@ public class ProductService {
         this.discountRepo = discountRepo;
         this.jobScheduler = jobScheduler;
 
-        this.jobScheduler.scheduleRecurrently("* */1 * * *", () -> changeDiscountRandomly());
+        this.jobScheduler.scheduleRecurrently("* 0 * * *", () -> changeDiscountRandomly());
     }
 
     public Product newProduct(Product product){
@@ -87,8 +88,8 @@ public class ProductService {
             discountRepo.delete(active_discount);
         }
 
-        long rnd_num = (long) ((java.lang.Math.random()*100 % 10 )+1);
-        Product random_product = entityManager.createQuery("SELECT product FROM Product product ORDER BY "+rnd_num, Product.class).getSingleResult();
+        long product_id = ((BigInteger) entityManager.createNativeQuery("SELECT id FROM products ORDER BY random() LIMIT 1").getSingleResult()).longValue();
+        Product random_product = productRepo.getById(product_id);
 
         byte rnd_discount = (byte) ((new Random()).nextInt(6) + 5);
         random_product.setDiscount(rnd_discount);

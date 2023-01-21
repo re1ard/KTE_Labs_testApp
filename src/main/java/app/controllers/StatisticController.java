@@ -18,13 +18,6 @@ public class StatisticController {
         this.statisticService = statisticService;
     }
 
-    @PostMapping("/update")
-    public ResponseEntity ForceUpdateStatistic(){
-        statisticService.updateCustomerStatistic();
-        statisticService.updateProductStatistic();
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
     @GetMapping
     public ResponseEntity RequestStatistic(
             @RequestParam(required = false, defaultValue = "0") Long customer_id,
