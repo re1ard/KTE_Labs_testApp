@@ -16,12 +16,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         storage_engine: innodb
-        format_sql: true
+        format_sql: false
 org:
   jobrunr:
     background-job-server:
