@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.abs;
 
 import app.entities.Customer;
 import app.entities.bucket.Sell;
@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/sell")
-public class SellController {
+public abstract class SellController {
 
     private CustomerService customerService;
     private ProductService productService;

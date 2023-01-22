@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.abs;
 
 import app.entities.statistic.CustomerStatistic;
 import app.entities.statistic.ProductStatistic;
@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/statistic")
-public class StatisticController {
+public abstract class StatisticController {
     private StatisticService statisticService;
 
     @Autowired

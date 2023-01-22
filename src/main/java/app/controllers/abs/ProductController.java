@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.abs;
 
 import app.entities.product.Product;
 import app.entities.product.PurchasedProduct;
@@ -6,22 +6,19 @@ import app.services.CustomerService;
 import app.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping(value = "/api/products")
-public class ProductController {
+public abstract class ProductController {
     private ProductService productService;
-    private CustomerService customerService;
 
     @Autowired
     public ProductController(ProductService productService,
                              CustomerService customerService){
         this.productService = productService;
-        this.customerService = customerService;
     }
 
     //3.Список товаров

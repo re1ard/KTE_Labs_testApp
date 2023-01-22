@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@XmlRootElement(name = "Product")
 //Продукт который существует
 public class Product {
     @Id

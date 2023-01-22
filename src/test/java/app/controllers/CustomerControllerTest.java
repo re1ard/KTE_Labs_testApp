@@ -20,6 +20,6 @@ public class CustomerControllerTest extends BaseTest {
 
     @Test
     public void RemoveUserDiscount() throws Exception {
-        mockMvc.perform(patch("http://localhost:8080/api/customers/1?first_discount=-1")).andDo(print()).andExpect(status().isOk());
+        mockMvc.perform(patch("http://localhost:8080/api/customers/1?first_discount=0")).andDo(print()).andExpect(status().isOk());
     }
 }

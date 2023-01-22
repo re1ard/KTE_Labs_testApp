@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.abs;
 
 import app.entities.Customer;
 import app.services.CustomerService;
@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/customers")
-public class CustomerController {
+public abstract class CustomerController {
 
     private CustomerService customerService;
 
