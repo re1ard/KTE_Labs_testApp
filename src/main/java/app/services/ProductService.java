@@ -12,6 +12,7 @@ import app.repositories.product.SelledProductRepo;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -32,6 +33,9 @@ public class ProductService {
     private DiscountRepo discountRepo;
     private JobScheduler jobScheduler;
 
+    @Value("${app.background.products.random_discount}")
+    private boolean background_random_discount;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -51,7 +55,9 @@ public class ProductService {
         this.discountRepo = discountRepo;
         this.jobScheduler = jobScheduler;
 
-        this.jobScheduler.scheduleRecurrently("* 0 * * *", () -> changeDiscountRandomly());
+        if(background_random_discount) {
+            this.jobScheduler.scheduleRecurrently("* 0 * * *", () -> changeDiscountRandomly());
+        }
     }
 
     public Product newProduct(Product product){

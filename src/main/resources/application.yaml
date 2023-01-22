@@ -28,3 +28,10 @@ org:
       enabled: true
     dashboard:
       enabled: true
+
+app:
+  background:
+    statistic:
+      update: true
+    products:
+      random_discount: true

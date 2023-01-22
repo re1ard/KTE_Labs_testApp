@@ -1,5 +1,6 @@
 package app.entities.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public class Product {
     //Название продукта
     private String name;
 
+    @JsonIgnore
     @Column(name = "description", nullable = false)
     //Описание продукта
     private String description;
@@ -34,6 +36,7 @@ public class Product {
     //цена в копейках
     private Long price;
 
+    @JsonIgnore
     @Column(name = "discount")
     private Byte discount = 0;
 
@@ -43,6 +46,7 @@ public class Product {
         return price - price * (discount / 100);
     }
 
+    @JsonIgnore
     public Long getOriginalPrice(){
         return price;
     }

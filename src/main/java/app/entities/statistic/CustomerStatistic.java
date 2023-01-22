@@ -1,5 +1,6 @@
 package app.entities.statistic;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,9 +16,11 @@ public class CustomerStatistic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @JsonIgnore
     private Long id;
 
     @Column(name = "customer_id")
+    @JsonIgnore
     //ид покупателя
     private Long customer_id;
 

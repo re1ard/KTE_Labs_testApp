@@ -11,6 +11,7 @@ import app.repositories.statistic.ProductStatisticRepo;
 import org.jobrunr.jobs.annotations.Job;
 import org.jobrunr.scheduling.JobScheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,9 @@ public class StatisticService {
     private ProductRepo productRepo;
     private CustomerRepo customerRepo;
     private JobScheduler jobScheduler;
+
+    @Value("${app.background.statistic.update}")
+    boolean background_statistic_update;
 
     @Autowired
     public StatisticService(CustomerStatisticRepo customerStatisticRepo,
@@ -39,8 +43,10 @@ public class StatisticService {
         this.customerRepo = customerRepo;
         this.jobScheduler = jobScheduler;
 
-        this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateProductStatistic());
-        this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateCustomerStatistic());
+        if (background_statistic_update) {
+            this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateProductStatistic());
+            this.jobScheduler.scheduleRecurrently("*/15 * * * *", () -> updateCustomerStatistic());
+        }
     }
 
     public ProductStatistic getProduct(Long product_id) {
